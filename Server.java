@@ -80,15 +80,11 @@ public class Server {
                 p2++; 
             }
 
-            //ObjectOutputStream outputStream = new ObjectOutputStream(soc.getOutputStream());
-            //ObjectInputStream InputStream = new ObjectInputStream(soc.getInputStream());
-            //DataOutputStream dataOutputStream = new DataOutputStream(soc.getOutputStream());
             BufferedReader serverInput = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader InputStreamString = new BufferedReader(new InputStreamReader(soc.getInputStream()));
             PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
             String player1String = deck.toString(player1);
             out.println(Integer.toString(player1[0]));
-            //outputStream.writeObject(player1);
 
             String player2String = deck.toString(player2);
             out.println(player2String);
@@ -101,8 +97,6 @@ public class Server {
 
             score1 = deck.SumCards(player1);
             score2 = deck.SumCards(player2);
-           // dataOutputStream.writeInt(score2);
-            //outputStream.writeObject(score2);
             out.println(Integer.toString(score2));
             System.out.println("Total: " + score1);
 
@@ -111,7 +105,6 @@ public class Server {
                 play1Win =true;
             }
 
-            //outputStream.writeObject(play1Stand);
             out.println(Boolean.toString(play1Stand));
             out.println(Boolean.toString(play1Win));
             
@@ -157,21 +150,14 @@ public class Server {
                 out.println(Boolean.toString(play1Stand));
             }
 
-            //outputStream.writeObject(player1);
             player1String = deck.toString(player1);
             out.println(player1String);
-            //outputStream.writeObject(score1);
             out.println(Integer.toString(score1));
             out.println(Boolean.toString(play1Stand));
             out.println(Boolean.toString(play1Win));
             out.println(Boolean.toString(play1Lose));
             out.println(Boolean.toString(play2Lose));
             out.println(Boolean.toString(play2Win));
-            // outputStream.writeObject(play1Stand);
-            // outputStream.writeObject(play1Win);
-            // outputStream.writeObject(play1Lose);
-            // outputStream.writeObject(play2Lose);
-            // outputStream.writeObject(play2Win);
 
             while(!play2Stand && !play1Lose && !play1Win){
                 System.out.println("Before reading choice2");
@@ -190,15 +176,11 @@ public class Server {
                 out.println(player2String);
                 score2 = deck.SumCards(player2);
                 out.println(Integer.toString(score2));
-                //play2Stand = (Boolean) InputStream.readObject();
                 play2Stand = Boolean.parseBoolean(InputStreamString.readLine());
             }
 
-            //play2Lose = (Boolean) InputStream.readObject();
             play2Lose = Boolean.parseBoolean(InputStreamString.readLine());
-            //play1Win = (Boolean) InputStream.readObject();
             play1Win = Boolean.parseBoolean(InputStreamString.readLine());
-            //play2Win = (Boolean) InputStream.readObject();
             play2Win = Boolean.parseBoolean(InputStreamString.readLine());
 
             player1String = deck.toString(player1);
