@@ -1,115 +1,95 @@
-import java.io.*;
 import java.net.Socket;
+import java.io.*; 
 
 public class Client {
     
    public static void main(String[] args) {
+
         try{
             System.out.println("Client started");
             Socket soc = new Socket("localhost", 9806);
 
-            String choice1;
-            
+            String choice;
+            int OpponentScore;
+
             BufferedReader InputStreamString = new BufferedReader(new InputStreamReader(soc.getInputStream()));
             BufferedReader clientInput = new BufferedReader(new InputStreamReader(System.in));
             PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
-            String player1String = InputStreamString.readLine();
-            String player2String = InputStreamString.readLine();
 
-            System.out.println("Opponent card: "+ player1String);
-            System.out.println("Your cards: " + player2String);
-            int score2 = Integer.parseInt(InputStreamString.readLine());
-            System.out.println("Total: " + score2);
+            System.out.println(InputStreamString.readLine());
+            System.out.println(InputStreamString.readLine());
 
-            Boolean play1Stand = Boolean.parseBoolean(InputStreamString.readLine());
-            Boolean play1Win = Boolean.parseBoolean(InputStreamString.readLine());
+            String OpponentString = InputStreamString.readLine();
+            String PlayerString = InputStreamString.readLine();
+
+            System.out.println("Opponent card: "+ OpponentString);
+            System.out.println("Your cards: " + PlayerString);
+
+            int PlayerScore = Integer.parseInt(InputStreamString.readLine());
+            System.out.println("Total: " + PlayerScore);
+            
+            //check if initial win
+            //player 1 win?
+            Boolean OpponentStand = Boolean.parseBoolean(InputStreamString.readLine());
+            Boolean OpponentWin = Boolean.parseBoolean(InputStreamString.readLine());
 
             //player 2 win?
-            Boolean play2Stand = Boolean.parseBoolean(InputStreamString.readLine());
-            Boolean play2Win = Boolean.parseBoolean(InputStreamString.readLine());
+            Boolean PlayerStand = Boolean.parseBoolean(InputStreamString.readLine());
+            Boolean PlayerWin = Boolean.parseBoolean(InputStreamString.readLine());
 
-            while(!play1Stand && !play2Win){
-                System.out.println("While loop start");
-                choice1 = InputStreamString.readLine();
-                System.out.println("after choice");
-                System.out.println("Your opponent chose: " + choice1);
-                play1Stand = Boolean.parseBoolean(InputStreamString.readLine());
-            }
-
-            player1String = InputStreamString.readLine();
-            int score1 = Integer.parseInt(InputStreamString.readLine());
-            play1Stand = Boolean.parseBoolean(InputStreamString.readLine());
-            play1Win = Boolean.parseBoolean(InputStreamString.readLine());
-            Boolean play1Lose = Boolean.parseBoolean(InputStreamString.readLine());
-            Boolean play2Lose = Boolean.parseBoolean(InputStreamString.readLine());
-            play2Win = Boolean.parseBoolean(InputStreamString.readLine());
-
-            while(!play2Stand && !play2Win && !play1Win){
-                System.out.println("Hit or Stand: ");
-                String choice = clientInput.readLine();
-                System.out.println("Choice delivered");
+            // FOR PLAYER 1
+            while(!OpponentStand && !OpponentWin && !PlayerWin){
+                System.out.println(InputStreamString.readLine());
+                choice = clientInput.readLine();
                 out.println(choice);
-                play2Stand = Boolean.parseBoolean(InputStreamString.readLine());
-                System.out.println(play2Stand);
-                if(play2Stand){
-                    if(score1==score2){
-                        play2Win = true;
-                        play1Win = true;
-                    }
-                    else if(score1>score2){
-                        play1Win = true;
-                    }
-                    else{
-                        play2Win = true;
-                    }
+                //Thread.sleep(5000);
+                if(choice.toLowerCase().equals("stand")){
+                    OpponentStand = Boolean.parseBoolean(InputStreamString.readLine());
                     break;
                 }
-
-                player2String = InputStreamString.readLine();
-                score2 = Integer.parseInt(InputStreamString.readLine());
-                System.out.println("Your cards: " + player2String);
-                System.out.println("Total: "+ score2);
-                if(score2>21){
-                    play2Stand = true;
-                    play2Lose = true;
-                    play1Win = true;
+                else if(choice.toLowerCase().equals("hit")){
+                    OpponentString = InputStreamString.readLine();
+                    System.out.println(OpponentString);
+                    OpponentScore = Integer.parseInt(InputStreamString.readLine());
+                    System.out.println("Total: " + OpponentScore);
                 }
-                else if(score2==21){
-                    play2Stand = true;
-                    play2Win = true;
+                OpponentStand = Boolean.parseBoolean(InputStreamString.readLine());
+            }
+
+            OpponentString = InputStreamString.readLine();
+            OpponentScore = Integer.parseInt(InputStreamString.readLine());
+            OpponentStand = Boolean.parseBoolean(InputStreamString.readLine());
+            OpponentWin = Boolean.parseBoolean(InputStreamString.readLine());
+            Boolean OpponentLose = Boolean.parseBoolean(InputStreamString.readLine());
+            Boolean PlayerLose = Boolean.parseBoolean(InputStreamString.readLine());
+            PlayerWin = Boolean.parseBoolean(InputStreamString.readLine());
+
+
+            while(!PlayerStand && !OpponentWin){
+                System.out.println(InputStreamString.readLine());
+                String choice2 = clientInput.readLine();
+                out.println(choice2);
+                //Thread.sleep(5000);
+                if(choice2.toLowerCase().equals("stand")){
+                    PlayerStand = Boolean.parseBoolean(InputStreamString.readLine());
+                    break;
                 }
-                out.println(Boolean.toString(play2Stand));
+                else if(choice2.toLowerCase().equals("hit")){
+                    PlayerString = InputStreamString.readLine();
+                    System.out.println(PlayerString);
+                    PlayerScore = Integer.parseInt(InputStreamString.readLine());
+                    System.out.println("Total: " + PlayerScore);
+                }
+                PlayerStand = Boolean.parseBoolean(InputStreamString.readLine());
             }
 
-            System.out.println("Delivering Start");
-            out.println(Boolean.toString(play2Lose));
-            System.out.println("Play2Lose delivered");
-            out.println(Boolean.toString(play1Win));
-            System.out.println("Play1Win delivered");
-            out.println(Boolean.toString(play2Win));
-            System.out.println("Play2Win delivered");
+            String cardsOutput = InputStreamString.readLine();
+            System.out.println(cardsOutput);
 
-            player1String = InputStreamString.readLine();
-            System.out.println("Opponent's cards: ");
-            System.out.println(player1String);
-            System.out.println("Opponent's score: " + score1);
+            String result = InputStreamString.readLine();
+            System.out.println(result);
 
-            System.out.println("Your cards: ");
-            System.out.println(player2String);
-            System.out.println("Your score: " + score2);
-
-            if((play1Win && play2Win) || (play1Lose && play2Lose)){
-                String result = "Tie";
-                System.out.println(result);
-            } 
-            else if(play1Win){
-                String result = "You lose! T_T";
-                System.out.println(result);
-            }
-            else if(play2Win){
-                String result = "You win! :D";
-                System.out.println(result);
-            }
+            soc.close();
         }
         catch(Exception e){
             e.printStackTrace();
