@@ -8,6 +8,14 @@ public class Client {
         try{
             System.out.println("Client started");
             Socket soc = new Socket("localhost", 9806);
+            System.out.println( " _     _            _    _            _    ");
+            System.out.println("| |   | |          | |  (_)          | |   ");
+            System.out.println("| |__ | | __ _  ___| | ___  __ _  ___| | __");
+            System.out.println("| '_ \\| |/ _` |/ __| |/ / |/ _` |/ __| |/ /");
+            System.out.println("| |_) | | (_| | (__|   <| | (_| | (__|   < ");
+            System.out.println("|_.__/|_|\\__,_|\\___|_|\\_\\ |\\__,_|\\___|_|\\_\\");
+            System.out.println("                       _/ |                ");
+            System.out.println("                      |__/        ");
 
             String choice;
             int OpponentScore;
@@ -22,7 +30,7 @@ public class Client {
             String OpponentString = InputStreamString.readLine();
             String PlayerString = InputStreamString.readLine();
 
-            System.out.println("Opponent card: "+ OpponentString);
+            System.out.println("Opponent card: "+ OpponentString + "| |");
             System.out.println("Your cards: " + PlayerString);
 
             int PlayerScore = Integer.parseInt(InputStreamString.readLine());
@@ -39,7 +47,7 @@ public class Client {
 
             // FOR PLAYER 1
             while(!OpponentStand && !OpponentWin && !PlayerWin){
-                System.out.println(InputStreamString.readLine());
+                System.out.println("-------------------\n"+InputStreamString.readLine());
                 choice = clientInput.readLine();
                 out.println(choice);
                 //Thread.sleep(5000);
@@ -49,7 +57,7 @@ public class Client {
                 }
                 else if(choice.toLowerCase().equals("hit")){
                     OpponentString = InputStreamString.readLine();
-                    System.out.println(OpponentString);
+                    System.out.println("-------------------\n" + OpponentString);
                     OpponentScore = Integer.parseInt(InputStreamString.readLine());
                     System.out.println("Total: " + OpponentScore);
                 }
@@ -65,8 +73,8 @@ public class Client {
             PlayerWin = Boolean.parseBoolean(InputStreamString.readLine());
 
 
-            while(!PlayerStand && !OpponentWin){
-                System.out.println(InputStreamString.readLine());
+            while(!PlayerStand && !OpponentWin && !OpponentLose){
+                System.out.println("\n-----------------\n" + InputStreamString.readLine());
                 String choice2 = clientInput.readLine();
                 out.println(choice2);
                 //Thread.sleep(5000);
@@ -76,7 +84,7 @@ public class Client {
                 }
                 else if(choice2.toLowerCase().equals("hit")){
                     PlayerString = InputStreamString.readLine();
-                    System.out.println(PlayerString);
+                    System.out.println("-------------------\n" + PlayerString);
                     PlayerScore = Integer.parseInt(InputStreamString.readLine());
                     System.out.println("Total: " + PlayerScore);
                 }
@@ -87,7 +95,7 @@ public class Client {
             System.out.println(cardsOutput);
 
             String result = InputStreamString.readLine();
-            System.out.println(result);
+            System.out.println("-----------------\n" + result + "\n-----------------");
 
             soc.close();
         }
