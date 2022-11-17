@@ -134,7 +134,6 @@ public class Server {
                 out2.println("It's your opponent turn! Don't play the game! Press Enter");
                 String choice = InputStreamString.readLine();
                 String input2 = InputStreamString2.readLine();
-                //Thread.sleep(5000);
 
                 if(choice.toLowerCase().equals("stand")){
                     play1Stand = true;
@@ -142,7 +141,6 @@ public class Server {
                     out2.println(Boolean.toString(play1Stand));
                     break;
                 }
-                System.out.println("Play1Stand delivered");
                 player1[p1++] = deck.TakeRandom(deck.SumCards(player1));
                 player1String = deck.toString(player1);
                 out.println("Your cards: " + player1String);
@@ -199,14 +197,13 @@ public class Server {
                 String choice = InputStreamString2.readLine();
                 System.out.println(choice);
                 String input1 = InputStreamString.readLine();
-                //Thread.sleep(5000);
+
                 if(choice.toLowerCase().equals("stand")){
                     play2Stand = true;
                     out.println(Boolean.toString(play2Stand));
                     out2.println(Boolean.toString(play2Stand));
                     break;
                 }
-                System.out.println("Play2Stand delivered");
                 player2[p2++] = deck.TakeRandom(deck.SumCards(player2));
                 player2String = deck.toString(player2);
                 out2.println("Your cards: " + player2String);
@@ -263,28 +260,26 @@ public class Server {
             out2.println(cardsToPlayer2);
 
             if((play1Win && play2Win) || (play1Lose && play2Lose)){
-                    String result = "Tie";
+                    String result = "-----------------\nTie\n-----------------";
                     System.out.println(result);
                 } 
                 else if(play1Win){
                     String resultToPlayer1 = "You win! :D";
                     String resultToPlayer2 = "You Lose! T_T";
-                    System.out.println("Player 1 wins!");
+                    System.out.println("-----------------\nPlayer 1 wins!\n-----------------");
                     out.println(resultToPlayer1);
                     out2.println(resultToPlayer2);
                 }
                 else if(play2Win){
                     String resultToPlayer1 = "You Lose! T_T";
                     String resultToPlayer2 = "You Win! :D";
-                    System.out.println("Player 2 wins!");
+                    System.out.println("-----------------\nPlayer 2 wins!\n-----------------");
                     out.println(resultToPlayer1);
                     out2.println(resultToPlayer2);
                 }
 
-            Thread.sleep(1000);
-            // while(soc.isConnected() || soc2.isConnected()){
-                
-            // }
+            Thread.sleep(3000);
+
             soc.close();
             soc2.close();
             ss.close();
