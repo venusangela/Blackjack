@@ -3,13 +3,14 @@ import java.net.Socket;
 import java.net.InetAddress;
 import java.io.*;
 import java.util.Random;
-import java.util.Scanner;
 import java.lang.Thread;
 
+//Buat class Cards untuk menyimpan kondisi deck, menghitung total kartu setiap pemain, dan mengambil kartu secara random dari deck
 class Cards{
     int[][] cards = {{11,2,3,4,5,6,7,8,9,10,10,10,10}, {11,2,3,4,5,6,7,8,9,10,10,10,10},
     {11,2,3,4,5,6,7,8,9,10,10,10,10}, {11,2,3,4,5,6,7,8,9,10,10,10,10}};
 
+    //ambil kartu secara acak dari deck
     public int TakeRandom(int sumCard){
         int val, rnd1,rnd2;
         do{
@@ -24,6 +25,7 @@ class Cards{
         return val;
     }
 
+    //hitung total kartu pemain
     public int SumCards(int[] arr){
         int total = 0;
         for(int i = 0; i < arr.length; i++){
@@ -31,12 +33,16 @@ class Cards{
         }
         return total;  
     }
+
+    //print kartu pemain
     public void PrintCards(int[] pcards){
         for(int i =0; i<pcards.length;i++){
             if(pcards[i]==0) break;
             System.out.println(pcards[i]);
         }
     }
+
+    //ubah array kartu pemain menjadi string
     public String toString(int[] pcards){
         String cardString = "";
         for(int i =0; i<pcards.length;i++){
@@ -49,27 +55,33 @@ class Cards{
 
 public class Server {
     public static void main(String[] args){
-        Scanner in = new Scanner(System.in);
         try
-        {
+        {   
+            //Membuka server
             System.out.println("Waiting for clients...");
             ServerSocket ss = new ServerSocket(9806);
             InetAddress inetAddress = InetAddress.getLocalHost();
             System.out.println("Server opened at: "+inetAddress.getHostAddress());
+
+            //Menerima koneksi socket player 1 (client 1)
             Socket soc = ss.accept();
             BufferedReader InputStreamString = new BufferedReader(new InputStreamReader(soc.getInputStream()));
             PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
-            System.out.println("Player 1 (" + soc.getLocalAddress() + ") has joined");
+            System.out.println("Player 1 (" + soc.getInetAddress() + ") has joined");
             out.println("Welcome Player 1, please wait for Player 2 to join");
+
+            //Menerima koneksi socket player 2 (client 2)
             Socket soc2 = ss.accept(); 
             BufferedReader InputStreamString2 = new BufferedReader(new InputStreamReader(soc2.getInputStream()));
             PrintWriter out2 = new PrintWriter(soc2.getOutputStream(), true);
             System.out.println("Player 2 (" + soc2.getLocalAddress() + ") has joined");
             out2.println("Welcome Player 2");
+
             System.out.println("Starting Blackjack");
             out.println("Welcome to Blackjack");
             out2.println("Welcome to Blackjack");
 
+            //Inisialisasi kondisi permainan awal
             int[] player1 = {0,0,0,0,0,0,0,0,0,0};
             int score1 = 0;
             int p1 = 0;
@@ -82,6 +94,7 @@ public class Server {
             Boolean play2Win=false, play2Lose  = false;
             Cards deck = new Cards();
 
+            //Membagikan dua kartu untuk setiap pemain sebagai deck awal
             for(int i=0;i<2;i++){
                 int p1card = deck.TakeRandom(deck.SumCards(player1));
                 int p2card = deck.TakeRandom(deck.SumCards(player2));
@@ -94,6 +107,7 @@ public class Server {
             String player1String = deck.toString(player1);
             String player2String = deck.toString(player2);
 
+            //Mengirimkan kartu dan nilai total awal setiap pemain
             out.println(Integer.toString(player2[0]));
             out2.println(Integer.toString(player1[0]));
             out.println(player1String);
@@ -108,27 +122,31 @@ public class Server {
             System.out.println("Player 1 cards: " + player1String + " | Total: " + score1);
             System.out.println("Player 2 cards: " + player2String + " | Total: " + score2);
 
-
+            //Cek apakah pemain 1 langsung menang
             if(score1==21){
                 play1Stand = true;
                 play1Win =true;
             }
 
+            //Kirim status menang pemain 1
             out.println(Boolean.toString(play1Stand));
             out.println(Boolean.toString(play1Win));
             out2.println(Boolean.toString(play1Stand));
             out2.println(Boolean.toString(play1Win));
             
+            //Cek apakah pemain 2 langsung menang
             if(score2==21){
                 play2Stand = true;
                 play2Win = true;
             }
 
+            //Kirim status menang pemain 2 kepada setiap pemain
             out.println(Boolean.toString(play2Stand));
             out.println(Boolean.toString(play2Win));
             out2.println(Boolean.toString(play2Stand));
             out2.println(Boolean.toString(play2Win));
 
+            //Pemain 1 bermain
             while(!play1Stand && !play2Win){
                 out.println("Hit or Stand?");
                 out2.println("It's your opponent turn! Don't play the game! Press Enter");
@@ -168,6 +186,7 @@ public class Server {
                 out2.println(Boolean.toString(play1Stand));
             }
 
+            //Mengirim data pemain ke setiap client
             player1String = deck.toString(player1);
 
             out.println(player1String);
@@ -191,6 +210,7 @@ public class Server {
             out.println(Boolean.toString(play2Win));
             out2.println(Boolean.toString(play2Win));
 
+            //Pemain 2 Bermain
             while(!play2Stand && !play1Lose && !play1Win){
                 out.println("It's your opponent turn! Don't play the game! Press Enter");
                 out2.println("Hit or Stand?");
@@ -231,12 +251,16 @@ public class Server {
                 out2.println(Boolean.toString(play2Stand));
             }
 
+
+            //Menentukan Pemenang
             if(!play1Win && !play2Win){
                 if(score1>score2){
                     play1Win = true;
+                    // play2Lose=true;
                 }
                 else if(score2>score1){
                     play2Win = true;
+                    // play1Lose=true;
                 }
                 else{
                     play1Win = true;
@@ -247,6 +271,7 @@ public class Server {
             player1String = deck.toString(player1);
             player2String = deck.toString(player2);
 
+            //Menunjukkan kartu setiap pemain di server
             String cardsToPlayer1 = ("Your cards: " + player1String + " | Your total: " + score1 + 
                                     " | Opponent's cards: " + player2String + " | Opponent's total: " + score2);
             
@@ -256,23 +281,27 @@ public class Server {
             System.out.println("Player 1 cards: " + player1String + "\nPlayer 1 Total: " + score1);
             System.out.println("Player 2 cards: " + player2String + "\nPlayer 2 Total: " + score2);
 
+            //Mengirim data semua pemain ke client
             out.println(cardsToPlayer1);
             out2.println(cardsToPlayer2);
 
+            //Mengirim hasil menang kalah ke pemain
             if((play1Win && play2Win) || (play1Lose && play2Lose)){
-                    String result = "-----------------\nTie\n-----------------";
+                    String result = "Tie";
                     System.out.println(result);
+                    out.println(result);
+                    out2.println(result);
                 } 
                 else if(play1Win){
-                    String resultToPlayer1 = "You win! :D";
-                    String resultToPlayer2 = "You Lose! T_T";
+                    String resultToPlayer1 = "win";
+                    String resultToPlayer2 = "lose";
                     System.out.println("-----------------\nPlayer 1 wins!\n-----------------");
                     out.println(resultToPlayer1);
                     out2.println(resultToPlayer2);
                 }
                 else if(play2Win){
-                    String resultToPlayer1 = "You Lose! T_T";
-                    String resultToPlayer2 = "You Win! :D";
+                    String resultToPlayer1 = "lose";
+                    String resultToPlayer2 = "win";
                     System.out.println("-----------------\nPlayer 2 wins!\n-----------------");
                     out.println(resultToPlayer1);
                     out2.println(resultToPlayer2);
@@ -280,6 +309,7 @@ public class Server {
 
             Thread.sleep(3000);
 
+            //Menutup koneksi socket dan server
             soc.close();
             soc2.close();
             ss.close();
